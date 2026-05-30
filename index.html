@@ -224,7 +224,7 @@ textarea{resize:vertical;min-height:75px}
       </div>
     </div>
     <div class="hero-pills">
-      <span class="pill">City Bell · Calle 478</span>
+      <span class="pill">City Bell · Calles 160 y 468</span>
       <span class="pill">Seguridad 24hs</span>
     </div>
   </div>
@@ -236,6 +236,7 @@ textarea{resize:vertical;min-height:75px}
     <button class="dtab active" onclick="cambiarTab('P')" id="dtab-P">Pendientes <span class="dcnt" id="dcnt-P">0</span></button>
     <button class="dtab" onclick="cambiarTab('EP')" id="dtab-EP">En Progreso <span class="dcnt" id="dcnt-EP">0</span></button>
     <button class="dtab" onclick="cambiarTab('R')" id="dtab-R">Resueltas <span class="dcnt" id="dcnt-R">0</span></button>
+    <button class="dtab" onclick="cambiarTab('SG')" id="dtab-SG">Sugerencias <span class="dcnt" id="dcnt-SG">0</span></button>
     <button class="dtab" onclick="cambiarTab('PA')" id="dtab-PA" style="display:none">Por aprobar <span class="dcnt" id="dcnt-PA">0</span></button>
     <button class="dtab t-admin" onclick="cambiarTab('ADM')" id="dtab-ADM" style="display:none">Administración</button>
   </div>
@@ -276,6 +277,11 @@ textarea{resize:vertical;min-height:75px}
   <button class="nav-btn" onclick="cambiarTab('R')" id="tab-R">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
     <span>Resueltas</span>
+  </button>
+  <button class="nav-btn" onclick="cambiarTab('SG')" id="tab-SG">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>Sugerencias</span>
+    <span class="nav-badge" id="nb-SG" style="display:none">0</span>
   </button>
   <button class="nav-btn" onclick="cambiarTab('PA')" id="tab-PA" style="display:none">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
@@ -478,12 +484,17 @@ function render(){
   const hoy=new Date();hoy.setHours(0,0,0,0);
   document.getElementById('st-venc').textContent=tareas.filter(t=>['P','EP'].includes(t.e)&&t.pl&&new Date(t.pl+'T00:00:00')<hoy).length;
   if(tab==='ADM'){if(!isAdmin)cambiarTab('P');else{renderAdmin();return;}}
-  const map={P,EP,R,PA};const lista=map[tab]||P;
+  // SG tab: all PA tasks visible to everyone
+  const SG=tareas.filter(t=>t.e==='PA');
+  const dcntSG=document.getElementById('dcnt-SG');if(dcntSG)dcntSG.textContent=SG.length;
+  const nbSG=document.getElementById('nb-SG');if(nbSG){nbSG.textContent=SG.length;nbSG.style.display=SG.length?'block':'none';}
+  const map={P,EP,R,PA,SG};const lista=map[tab]||P;
   const c=document.getElementById('tasks');c.innerHTML='';
   if(!lista.length){
+    const SG_icon='<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
     const icons={P:'<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',EP:'<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg>',R:'<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',PA:'<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>'};
-    const msgs={P:'No hay tareas pendientes',EP:'No hay tareas en progreso',R:'Sin tareas resueltas aún',PA:'No hay sugerencias por aprobar'};
-    c.innerHTML=`<div class="empty">${icons[tab]||icons.P}<p>${msgs[tab]||msgs.P}</p></div>`;return;
+    const msgs={P:'No hay tareas pendientes',EP:'No hay tareas en progreso',R:'Sin tareas resueltas aún',PA:'No hay sugerencias por aprobar',SG:'No hay sugerencias de vecinos aún'};
+    const icon=tab==='SG'?SG_icon:(icons[tab]||icons.P);c.innerHTML=`<div class="empty">${icon}<p>${msgs[tab]||msgs.P}</p></div>`;return;
   }
   lista.forEach(t=>c.appendChild(mkCard(t)));
 }
@@ -509,6 +520,22 @@ function mkCard(t){
   }
   const hist=t.historial||[];
   const histHtml=hist.length?`<button class="hist-toggle" onclick="toggleHist(this)">▶ Historial (${hist.length})</button><div class="hist-list" style="display:none">${hist.map(h=>`<div class="hist-item h-${h.a}"><strong>${LB[h.a]||h.a}</strong>${h.nota?` — ${x(h.nota)}`:''}<div class="hist-fecha">${fmtFull(h.ts)}</div></div>`).join('')}</div>`:'';
+  // Vote button for PA tasks (visible to everyone in SG tab)
+  const deviceId=getDeviceId();
+  const voters=t.voters||[];
+  const hasVoted=voters.includes(deviceId);
+  const voteCount=t.votos||0;
+  const maxVotes=Math.max(...tareas.filter(x=>x.e==='PA').map(x=>x.votos||0),1);
+  const voteHtml=t.e==='PA'?`
+    <div style="margin-top:11px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <button class="vote-btn${hasVoted?' voted':''}" onclick="${hasVoted?'':'votar(\''+t.id+'\')'}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="${hasVoted?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+        ${hasVoted?'Votado':'Apoyar'}
+        <span class="vote-count">${voteCount}</span>
+      </button>
+      ${voteCount>0?`<div style="flex:1;min-width:80px"><div class="vote-bar"><div class="vote-bar-fill" style="width:${Math.round(voteCount/maxVotes*100)}%"></div></div><span style="font-size:.68rem;color:var(--gray-400)">${voteCount} voto${voteCount!==1?'s':''}</span></div>`:''}
+    </div>`:'';
+
   const div=document.createElement('div');
   div.className=`card c-${t.e}`;
   div.innerHTML=`
@@ -647,7 +674,7 @@ window.setState=async(id,e)=>{const t=tareas.find(z=>z.id===id);if(!t)return;awa
 window.del=async id=>{if(!confirm('¿Eliminar?'))return;await fn.deleteDoc(fn.doc(db,'tareas',id));toast('Eliminada');};
 
 // TABS
-window.cambiarTab=t=>{tab=t;['P','EP','R','PA','ADM'].forEach(k=>{const m=document.getElementById('tab-'+k),d=document.getElementById('dtab-'+k);if(m)m.classList.toggle('active',k===t);if(d)d.classList.toggle('active',k===t);});render();};
+window.cambiarTab=t=>{tab=t;['P','EP','R','PA','SG','ADM'].forEach(k=>{const m=document.getElementById('tab-'+k),d=document.getElementById('dtab-'+k);if(m)m.classList.toggle('active',k===t);if(d)d.classList.toggle('active',k===t);});render();};
 
 // PIN
 function openPIN(){pinBuffer='';renderDots();document.getElementById('pin-err').textContent='';document.getElementById('m-pin').style.display='flex';}
@@ -671,6 +698,19 @@ window.exportExcel=()=>{
   const csv=[hds,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
   const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`LaCanada_${todayStr()}.csv`;a.click();URL.revokeObjectURL(url);toast('Excel descargado');
+};
+
+// DEVICE ID for voting
+function getDeviceId(){let id=localStorage.getItem('bc_did');if(!id){id='d_'+Math.random().toString(36).substr(2,12);localStorage.setItem('bc_did',id);}return id;}
+
+// VOTING
+window.votar=async id=>{
+  const deviceId=getDeviceId();
+  const t=tareas.find(z=>z.id===id);if(!t)return;
+  const voters=t.voters||[];
+  if(voters.includes(deviceId)){toast('Ya votaste esta sugerencia');return;}
+  await fn.updateDoc(fn.doc(db,'tareas',id),{voters:fn.arrayUnion(deviceId),votos:(t.votos||0)+1});
+  toast('Voto registrado');
 };
 
 // UTILS

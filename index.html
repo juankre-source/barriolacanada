@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="La Cañada">
+<meta name="theme-color" content="#1b4332">
+<title>Barrio La Cañada</title>
+<style>
+:root{
+  --green:#2d6a4f;--green-dark:#1b4332;--green-light:#52b788;--green-pale:#d8f3dc;
+  --accent:#f4a261;--danger:#e63946;--warning:#e9a000;--purple:#7c3aed;--purple-pale:#ede9fe;
+  --blue:#1a73e8;--blue-pale:#e8f0fe;
+  --gray-50:#f8f9fa;--gray-100:#f1f3f4;--gray-200:#e8eaed;--gray-400:#9aa0a6;--gray-600:#5f6368;--gray-800:#202124;
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 16px rgba(0,0,0,.12);--radius:14px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:var(--gray-50);color:var(--gray-800);min-height:100vh;padding-bottom:calc(70px + var(--safe-bottom))}
+
+/* HERO */
+.hero{position:relative;background:var(--green-dark);overflow:hidden;min-height:155px;padding-top:env(safe-area-inset-top,0)}
+.hero-img{position:absolute;inset:0;background:url('https://manuelponce.com.ar/wp-content/uploads/2026/02/WhatsApp-Image-2026-02-18-at-11.01.56.jpeg') center/cover;opacity:.35}
+.hero-content{position:relative;z-index:1;padding:18px 16px 20px}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.hero-text h1{font-size:1.4rem;font-weight:800;color:#fff;letter-spacing:-.5px;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.hero-text p{font-size:.78rem;color:rgba(255,255,255,.8);margin-top:2px}
+.hero-role{display:inline-block;margin-top:6px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:white;padding:3px 10px;border-radius:99px;font-size:.72rem;font-weight:700}
+.hero-role.admin{background:rgba(244,162,97,.4);border-color:rgba(244,162,97,.6)}
+.hero-role.area{background:rgba(26,115,232,.35);border-color:rgba(26,115,232,.5)}
+.hero-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.btn-hero{border:none;padding:8px 14px;border-radius:50px;font-weight:700;cursor:pointer;font-size:.8rem;white-space:nowrap}
+.btn-nueva{background:var(--accent);color:white;box-shadow:0 4px 12px rgba(244,162,97,.4)}
+.btn-icon{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:white;backdrop-filter:blur(4px)}
+.btn-icon.authed{background:rgba(82,183,136,.35);border-color:rgba(82,183,136,.5)}
+.hero-pills{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.pill{background:rgba(255,255,255,.18);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.25);color:white;padding:3px 9px;border-radius:99px;font-size:.7rem;font-weight:600}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 14px 2px}
+.stat{background:white;border-radius:12px;padding:12px 8px;box-shadow:var(--shadow);text-align:center}
+.stat-icon{font-size:1.2rem;margin-bottom:3px}
+.stat-num{font-size:1.3rem;font-weight:800;line-height:1}
+.stat-label{font-size:.65rem;color:var(--gray-600);margin-top:2px}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--gray-200);display:flex;z-index:100;padding-bottom:var(--safe-bottom);box-shadow:0 -4px 20px rgba(0,0,0,.08)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 2px;cursor:pointer;border:none;background:none;color:var(--gray-400);font-size:.6rem;font-weight:600;gap:2px;position:relative}
+.nav-btn.active{color:var(--green)}
+.nav-btn.t-admin.active{color:var(--accent)}
+.nav-btn.t-area.active{color:var(--blue)}
+.nav-icon{font-size:1.15rem;line-height:1}
+.nav-badge{position:absolute;top:5px;right:calc(50% - 20px);background:var(--danger);color:white;border-radius:99px;font-size:.58rem;font-weight:800;padding:1px 5px;min-width:16px;text-align:center}
+
+/* MAIN */
+main{padding:0 14px 10px}
+.grid{display:flex;flex-direction:column;gap:10px;padding-top:4px}
+
+/* CARDS */
+.card{background:white;border-radius:var(--radius);box-shadow:var(--shadow);padding:15px;border-left:3px solid transparent}
+.card.c-P{border-left-color:#d4b300}
+.card.c-EP{border-left-color:var(--blue)}
+.card.c-R{border-left-color:var(--green-light)}
+.card.c-PA{border-left-color:var(--purple);background:#fefcff}
+.card-title-row{display:flex;align-items:flex-start;gap:7px;flex-wrap:wrap}
+.card-title{font-weight:700;font-size:.93rem;flex:1;min-width:0}
+.card-desc{color:var(--gray-600);font-size:.82rem;margin-top:5px;line-height:1.5}
+.card-resolve-note{margin-top:7px;padding:7px 11px;background:var(--green-pale);border-radius:8px;font-size:.8rem;color:var(--green-dark)}
+.card-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px;font-size:.77rem;color:var(--gray-600)}
+.card-actions{display:flex;gap:6px;margin-top:11px;flex-wrap:wrap}
+
+/* HISTORIAL */
+.hist-toggle{background:none;border:none;color:var(--gray-400);font-size:.73rem;cursor:pointer;padding:5px 0 0;display:flex;align-items:center;gap:3px;font-weight:600}
+.hist-list{margin-top:8px;border-left:2px solid var(--gray-200);padding-left:11px;display:flex;flex-direction:column;gap:7px}
+.hist-item{font-size:.77rem;color:var(--gray-600);position:relative}
+.hist-item::before{content:'';position:absolute;left:-15px;top:5px;width:6px;height:6px;border-radius:50%;background:var(--gray-300)}
+.hist-item.h-R::before{background:var(--green)}
+.hist-item.h-P::before{background:#d4b300}
+.hist-item.h-EP::before{background:var(--blue)}
+.hist-fecha{color:var(--gray-400);font-size:.7rem}
+
+/* TAGS */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:5px;border:1.5px solid var(--gray-200);border-radius:10px;padding:8px 10px;min-height:42px;cursor:text;background:white}
+.tags-wrap:focus-within{border-color:var(--green)}
+.tag{background:var(--green-pale);color:var(--green-dark);border-radius:99px;padding:3px 10px;font-size:.8rem;font-weight:600;display:flex;align-items:center;gap:4px}
+.tag-x{cursor:pointer;opacity:.6;font-size:.9rem}.tag-x:hover{opacity:1}
+.tag-inp{border:none;outline:none;font-size:.9rem;min-width:100px;flex:1;font-family:inherit;background:transparent}
+
+/* BUTTONS */
+.btn{border:none;padding:7px 14px;border-radius:50px;cursor:pointer;font-size:.78rem;font-weight:700;transition:all .15s}
+.b-res{background:var(--green-pale);color:var(--green-dark)}
+.b-prog{background:var(--blue-pale);color:var(--blue)}
+.b-ed{background:var(--gray-100);color:var(--gray-600)}
+.b-del{background:#fce8e6;color:var(--danger)}
+.b-reab{background:#fff3cd;color:#856404}
+.b-apr{background:var(--green-pale);color:var(--green-dark);padding:9px 16px}
+.b-rej{background:#fce8e6;color:var(--danger);padding:9px 16px}
+
+/* BADGES */
+.bs{padding:3px 8px;border-radius:99px;font-size:.68rem;font-weight:700}
+.bs-P{background:#fff3cd;color:#856404}
+.bs-EP{background:var(--blue-pale);color:var(--blue)}
+.bs-R{background:var(--green-pale);color:var(--green-dark)}
+.bs-PA{background:var(--purple-pale);color:var(--purple)}
+.bc{background:var(--gray-100);color:var(--gray-600);padding:2px 7px;border-radius:6px;font-size:.68rem;font-weight:600}
+.ba{padding:2px 8px;border-radius:6px;font-size:.68rem;font-weight:700}
+.venc{color:var(--danger);font-weight:700}
+.pv{color:var(--warning);font-weight:700}
+.dim{color:var(--gray-400);font-size:.7rem}
+
+/* EMPTY */
+.empty{text-align:center;padding:48px 20px;color:var(--gray-400)}
+.empty-icon{font-size:2.8rem;margin-bottom:10px;opacity:.5}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;z-index:200;backdrop-filter:blur(2px)}
+.modal{background:white;border-radius:20px 20px 0 0;padding:22px 18px;width:100%;max-height:92vh;overflow-y:auto;padding-bottom:calc(22px + var(--safe-bottom))}
+.modal-handle{width:36px;height:4px;background:var(--gray-200);border-radius:2px;margin:0 auto 18px}
+.modal h2{font-size:1.05rem;font-weight:800;margin-bottom:16px}
+.fg{margin-bottom:13px}
+label{display:block;font-size:.73rem;font-weight:700;color:var(--gray-600);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+input[type=text],input[type=date],input[type=number],textarea,select{width:100%;border:1.5px solid var(--gray-200);border-radius:10px;padding:10px 13px;font-size:.95rem;font-family:inherit;color:var(--gray-800);-webkit-appearance:none;background:white}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--green)}
+textarea{resize:vertical;min-height:75px}
+.ma{display:flex;gap:9px;margin-top:18px}
+.btn-can{flex:1;background:var(--gray-100);color:var(--gray-600);padding:12px;border-radius:11px;border:none;cursor:pointer;font-weight:700;font-size:.875rem}
+.btn-sub{flex:2;background:var(--green);color:white;padding:12px;border-radius:11px;border:none;cursor:pointer;font-weight:700;font-size:.875rem}
+.btn-sub.danger{background:var(--danger)}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(78px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(20px);background:var(--green-dark);color:white;padding:11px 20px;border-radius:50px;font-size:.85rem;font-weight:600;z-index:300;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* PIN */
+.pin-modal{max-width:320px;border-radius:20px;padding:26px 22px;margin:auto;padding-bottom:26px}
+.pin-dots{display:flex;justify-content:center;gap:11px;margin:18px 0}
+.pin-dot{width:13px;height:13px;border-radius:50%;background:var(--gray-200);transition:background .15s}
+.pin-dot.filled{background:var(--green)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.pin-key{background:var(--gray-100);border:none;border-radius:11px;padding:14px;font-size:1.2rem;font-weight:700;cursor:pointer}
+.pin-key:active{background:var(--gray-200)}
+.pin-key.del{background:#fce8e6;color:var(--danger)}
+.pin-error{color:var(--danger);font-size:.8rem;text-align:center;margin-top:7px;min-height:18px}
+
+/* ADMIN PANEL */
+.section-title{font-size:.8rem;font-weight:800;color:var(--gray-400);text-transform:uppercase;letter-spacing:.8px;padding:16px 0 8px}
+.admin-card{background:white;border-radius:12px;box-shadow:var(--shadow);padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.admin-card-info{flex:1;min-width:0}
+.admin-card-info h4{font-size:.9rem;font-weight:700;margin-bottom:2px}
+.admin-card-info p{font-size:.78rem;color:var(--gray-600)}
+.admin-card-actions{display:flex;gap:6px;flex-shrink:0}
+.btn-sm{border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.75rem;font-weight:700}
+.btn-sm-edit{background:var(--blue-pale);color:var(--blue)}
+.btn-sm-del{background:#fce8e6;color:var(--danger)}
+.area-color{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+.add-btn{width:100%;background:var(--gray-100);border:2px dashed var(--gray-200);border-radius:12px;padding:13px;font-size:.85rem;font-weight:700;color:var(--gray-600);cursor:pointer;margin-bottom:8px}
+.add-btn:hover{background:var(--gray-200)}
+
+/* PIN display in admin */
+.pin-display{font-family:monospace;font-size:1.1rem;font-weight:700;background:var(--gray-100);padding:4px 10px;border-radius:6px;letter-spacing:2px}
+
+/* LOADING */
+.loading{text-align:center;padding:70px 20px;color:var(--gray-400)}
+.spin{display:inline-block;width:30px;height:30px;border:3px solid var(--gray-200);border-top-color:var(--green);border-radius:50%;animation:sp .7s linear infinite;margin-bottom:12px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* DESKTOP */
+@media(min-width:640px){
+  body{padding-bottom:0}
+  .bottom-nav{display:none}
+  .desktop-tabs{display:flex!important}
+  .stats{padding:18px 20px 6px;gap:12px}
+  .stat{padding:15px;text-align:left;display:flex;align-items:center;gap:11px}
+  .stat-icon{font-size:1.4rem;margin-bottom:0}
+  main{padding:0 20px 16px;max-width:860px;margin:0 auto}
+  .overlay{align-items:center}
+  .modal{border-radius:16px;max-width:520px;padding:26px}
+  .pin-modal{border-radius:16px;padding:26px 22px}
+  .modal-handle{display:none}
+  .toast{bottom:28px}
+}
+.desktop-tabs{display:none;background:white;box-shadow:var(--shadow);position:sticky;top:0;z-index:10}
+.dtabs{display:flex;padding:0 20px;max-width:860px;margin:0 auto;overflow-x:auto}
+.dtab{padding:13px 18px;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--gray-600);border:none;background:none;border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.dtab.active{color:var(--green);border-bottom-color:var(--green)}
+.dtab.t-admin.active{color:var(--accent);border-bottom-color:var(--accent)}
+.dtab.t-area.active{color:var(--blue);border-bottom-color:var(--blue)}
+.dcnt{background:var(--gray-100);color:var(--gray-600);border-radius:99px;padding:1px 7px;font-size:.7rem;font-weight:700}
+.dtab.active .dcnt{background:var(--green-pale);color:var(--green-dark)}
+.dtab.t-admin.active .dcnt{background:#fff3e0;color:#e65100}
+.dtab.t-area.active .dcnt{background:var(--blue-pale);color:var(--blue)}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PZ7MYW0G7J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PZ7MYW0G7J');
+</script>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-img"></div>
+  <div class="hero-content">
+    <div class="hero-top">
+      <div class="hero-text">
+        <h1>🏡 Barrio La Cañada</h1>
+        <p>City Bell · Asociación Civil</p>
+        <span class="hero-role" id="hero-role" style="display:none"></span>
+      </div>
+      <div class="hero-actions">
+        <button class="btn-hero btn-icon" onclick="exportExcel()" title="Exportar">📊</button>
+        <button class="btn-hero btn-nueva" onclick="abrirModal()">+ Sugerir</button>
+        <button class="btn-hero btn-icon" id="btn-lock" onclick="toggleAuth()">🔒</button>
+      </div>
+    </div>
+    <div class="hero-pills">
+      <span class="pill">📍 Calle 478 entre 162 y 164</span>
+      <span class="pill">🔒 Seguridad 24hs</span>
+    </div>
+  </div>
+</div>
+
+<!-- Desktop tabs -->
+<div class="desktop-tabs">
+  <div class="dtabs" id="dtabs-container">
+    <button class="dtab active" onclick="cambiarTab('P')" id="dtab-P">⏳ Pendientes <span class="dcnt" id="dcnt-P">0</span></button>
+    <button class="dtab" onclick="cambiarTab('EP')" id="dtab-EP">🔄 En Progreso <span class="dcnt" id="dcnt-EP">0</span></button>
+    <button class="dtab" onclick="cambiarTab('R')" id="dtab-R">✅ Resueltas <span class="dcnt" id="dcnt-R">0</span></button>
+    <button class="dtab" onclick="cambiarTab('PA')" id="dtab-PA" style="display:none">📬 Por aprobar <span class="dcnt" id="dcnt-PA">0</span></button>
+    <button class="dtab t-admin" onclick="cambiarTab('ADM')" id="dtab-ADM" style="display:none">⚙️ Administración</button>
+  </div>
+</div>
+
+<div class="stats" id="sec-stats" style="display:none">
+  <div class="stat"><div class="stat-icon">📋</div><div><div class="stat-num" id="st-open">0</div><div class="stat-label">Abiertas</div></div></div>
+  <div class="stat"><div class="stat-icon">⚠️</div><div><div class="stat-num" id="st-venc" style="color:var(--danger)">0</div><div class="stat-label">Vencidas</div></div></div>
+  <div class="stat"><div class="stat-icon">✅</div><div><div class="stat-num" id="st-res" style="color:var(--green)">0</div><div class="stat-label">Resueltas</div></div></div>
+</div>
+
+<main>
+  <div id="sec-load"><div class="loading"><div class="spin"></div><br>Cargando...</div></div>
+  <div class="grid" id="tasks"></div>
+</main>
+
+<!-- Bottom nav -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="nav-btn active" onclick="cambiarTab('P')" id="tab-P"><span class="nav-icon">⏳</span><span>Pendientes</span><span class="nav-badge" id="nb-P" style="display:none">0</span></button>
+  <button class="nav-btn" onclick="cambiarTab('EP')" id="tab-EP"><span class="nav-icon">🔄</span><span>Progreso</span></button>
+  <button class="nav-btn" onclick="cambiarTab('R')" id="tab-R"><span class="nav-icon">✅</span><span>Resueltas</span></button>
+  <button class="nav-btn" onclick="cambiarTab('PA')" id="tab-PA" style="display:none"><span class="nav-icon">📬</span><span>Aprobar</span><span class="nav-badge" id="nb-PA" style="display:none">0</span></button>
+  <button class="nav-btn t-admin" onclick="cambiarTab('ADM')" id="tab-ADM" style="display:none"><span class="nav-icon">⚙️</span><span>Admin</span></button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<!-- Modal tarea -->
+<div class="overlay" id="m-task" style="display:none" onclick="if(event.target===this)closeTask()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2 id="m-title">Sugerir una tarea</h2>
+    <p id="m-subtitle" style="font-size:.8rem;color:var(--gray-600);margin-top:-10px;margin-bottom:14px">Será revisada por la administración antes de aparecer.</p>
+    <div class="fg"><label>Tarea *</label><input type="text" id="f-ta" placeholder="Ej: Arreglar luminaria calle 478"/></div>
+    <div class="fg"><label>Descripción</label><textarea id="f-de" placeholder="Detalle del problema..."></textarea></div>
+    <div class="fg"><label>Área</label>
+      <select id="f-area"><option value="">— Sin área —</option></select>
+    </div>
+    <div class="fg">
+      <label>Responsables</label>
+      <div class="tags-wrap" id="tags-container" onclick="document.getElementById('tag-input').focus()">
+        <input type="text" id="tag-input" class="tag-inp" placeholder="Nombre y Enter"/>
+      </div>
+    </div>
+    <div class="fg"><label>Plazo</label><input type="date" id="f-pl"/></div>
+    <div class="ma">
+      <button class="btn-can" onclick="closeTask()">Cancelar</button>
+      <button class="btn-sub" onclick="saveTarea()">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal resolver -->
+<div class="overlay" id="m-res" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-handle"></div>
+    <h2>✅ Marcar como resuelta</h2>
+    <div class="fg"><label>¿Cómo se resolvió?</label><textarea id="r-no" placeholder="Descripción de la solución..."></textarea></div>
+    <div class="ma">
+      <button class="btn-can" onclick="document.getElementById('m-res').style.display='none'">Cancelar</button>
+      <button class="btn-sub" onclick="confirmRes()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal PIN -->
+<div class="overlay" id="m-pin" style="display:none" onclick="if(event.target===this)closePIN()">
+  <div class="modal pin-modal">
+    <div class="modal-handle"></div>
+    <h2 id="pin-title" style="text-align:center">🔐 Ingresar</h2>
+    <p id="pin-sub" style="text-align:center;font-size:.82rem;color:var(--gray-600);margin-top:-8px">Administración o área</p>
+    <div class="pin-dots">
+      <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-error" id="pin-err"></div>
+    <div class="pin-pad">
+      <button class="pin-key" onclick="pinKey('1')">1</button><button class="pin-key" onclick="pinKey('2')">2</button><button class="pin-key" onclick="pinKey('3')">3</button>
+      <button class="pin-key" onclick="pinKey('4')">4</button><button class="pin-key" onclick="pinKey('5')">5</button><button class="pin-key" onclick="pinKey('6')">6</button>
+      <button class="pin-key" onclick="pinKey('7')">7</button><button class="pin-key" onclick="pinKey('8')">8</button><button class="pin-key" onclick="pinKey('9')">9</button>
+      <button class="pin-key" onclick="pinKey('0')" style="grid-column:2">0</button>
+      <button class="pin-key del" onclick="pinDel()">⌫</button>
+    </div>
+    <div class="ma" style="margin-top:14px"><button class="btn-can" onclick="closePIN()">Cancelar</button></div>
+  </div>
+</div>
+
+<!-- Modal área (admin) -->
+<div class="overlay" id="m-area" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-handle"></div>
+    <h2 id="area-title">Nueva área</h2>
+    <div class="fg"><label>Nombre del área *</label><input type="text" id="a-nombre" placeholder="Ej: Luminarias"/></div>
+    <div class="fg"><label>Descripción</label><input type="text" id="a-desc" placeholder="Breve descripción"/></div>
+    <div class="fg"><label>PIN del área (4 dígitos) *</label><input type="number" id="a-pin" placeholder="Ej: 5678" maxlength="4" oninput="if(this.value.length>4)this.value=this.value.slice(0,4)"/></div>
+    <div class="fg"><label>Responsables del área</label>
+      <div class="tags-wrap" id="area-tags-container" onclick="document.getElementById('area-tag-input').focus()">
+        <input type="text" id="area-tag-input" class="tag-inp" placeholder="Nombre Apellido y Enter"/>
+      </div>
+    </div>
+    <div class="ma">
+      <button class="btn-can" onclick="document.getElementById('m-area').style.display='none'">Cancelar</button>
+      <button class="btn-sub" onclick="saveArea()">Guardar</button>
+    </div>
+    <div style="margin-top:10px;text-align:center" id="area-del-wrap" style="display:none">
+      <button class="btn-sub danger" style="width:100%" onclick="deleteArea()">🗑️ Eliminar área</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getFirestore,collection,addDoc,updateDoc,deleteDoc,doc,query,orderBy,onSnapshot,arrayUnion,getDocs,setDoc,getDoc}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ── CONFIG ──────────────────────────────────────────────
+const FB={apiKey:'AIzaSyAEBqcveLJIQkE7lrwDhg0B6MgBF2fu3u8',authDomain:'barrio-la-caniada.firebaseapp.com',projectId:'barrio-la-caniada',appId:'1:199150638:web:1cb3270b260ac2715ce3bf'};
+const ADMIN_PIN='0000'; // ← PIN DEL PRESIDENTE — CAMBIALO
+
+// ── STATE ────────────────────────────────────────────────
+let db,fn={};
+let tareas=[],areas=[]; // areas: {id, nombre, desc, pin, responsables:[]}
+let tab='P',editId=null,resId=null,editAreaId=null;
+let role=null; // null | 'admin' | {areaId, areaNombre, responsables:[]}
+let pinBuffer='';
+let currentTags=[],areaCurrentTags=[];
+
+const LB={P:'Pendiente',EP:'En Progreso',R:'Resuelta',PA:'Por aprobar'};
+const AREA_COLORS=['#2d6a4f','#1a73e8','#7c3aed','#e63946','#f4a261','#0d9488','#dc2626'];
+const nowISO=()=>new Date().toISOString();
+const todayStr=()=>new Date().toISOString().split('T')[0];
+
+// ── INIT ─────────────────────────────────────────────────
+addEventListener('DOMContentLoaded',async()=>{
+  setupTagInputs();
+  try{
+    const app=initializeApp(FB);
+    db=getFirestore(app);
+    fn={collection,addDoc,updateDoc,deleteDoc,doc,query,orderBy,onSnapshot,arrayUnion,getDocs,setDoc,getDoc};
+    // seed default areas if none exist
+    await seedAreas();
+    // subscribe
+    onSnapshot(query(collection(db,'tareas'),orderBy('ts','desc')),s=>{
+      tareas=s.docs.map(d=>({id:d.id,...d.data()}));
+      document.getElementById('sec-load').style.display='none';
+      document.getElementById('sec-stats').style.display='grid';
+      render();
+    });
+    onSnapshot(collection(db,'areas'),s=>{
+      areas=s.docs.map(d=>({id:d.id,...d.data()}));
+      populateAreaSelect();
+    });
+  }catch(e){alert('Error Firebase: '+e.message)}
+});
+
+async function seedAreas(){
+  const snap=await getDocs(collection(db,'areas'));
+  if(!snap.empty)return;
+  const defaults=[
+    {nombre:'Administración y Recaudación',desc:'Gestión administrativa y cobros',pin:'1111',responsables:[]},
+    {nombre:'Seguridad',desc:'Control de acceso y vigilancia',pin:'2222',responsables:[]},
+    {nombre:'Infraestructura',desc:'Obras y construcciones',pin:'3333',responsables:[]},
+    {nombre:'Mantenimiento',desc:'Mantenimiento general del barrio',pin:'4444',responsables:[]},
+    {nombre:'Perímetro',desc:'Cercos y límites del barrio',pin:'5555',responsables:[]},
+    {nombre:'Calles',desc:'Estado y mantenimiento de calles',pin:'6666',responsables:[]},
+    {nombre:'Luminarias',desc:'Alumbrado público',pin:'7777',responsables:[]},
+  ];
+  for(const a of defaults) await addDoc(collection(db,'areas'),a);
+}
+
+// ── TAG INPUTS ────────────────────────────────────────────
+function setupTagInputs(){
+  // tarea tags
+  document.getElementById('tag-input').addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===','){e.preventDefault();addTag(e.target.value.trim());}
+    if(e.key==='Backspace'&&!e.target.value&&currentTags.length)removeTag(currentTags.length-1);
+  });
+  // area tags
+  document.getElementById('area-tag-input').addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===','){e.preventDefault();addAreaTag(e.target.value.trim());}
+    if(e.key==='Backspace'&&!e.target.value&&areaCurrentTags.length)removeAreaTag(areaCurrentTags.length-1);
+  });
+}
+function addTag(v){if(!v||currentTags.includes(v))return;currentTags.push(v);document.getElementById('tag-input').value='';renderTags();}
+function removeTag(i){currentTags.splice(i,1);renderTags();}
+function renderTags(){
+  const c=document.getElementById('tags-container');
+  c.querySelectorAll('.tag').forEach(t=>t.remove());
+  const inp=document.getElementById('tag-input');
+  currentTags.forEach((tag,i)=>{const el=document.createElement('span');el.className='tag';el.innerHTML=`${x(tag)}<span class="tag-x" onclick="window._rt(${i})">×</span>`;c.insertBefore(el,inp);});
+}
+function addAreaTag(v){if(!v||areaCurrentTags.includes(v))return;areaCurrentTags.push(v);document.getElementById('area-tag-input').value='';renderAreaTags();}
+function removeAreaTag(i){areaCurrentTags.splice(i,1);renderAreaTags();}
+function renderAreaTags(){
+  const c=document.getElementById('area-tags-container');
+  c.querySelectorAll('.tag').forEach(t=>t.remove());
+  const inp=document.getElementById('area-tag-input');
+  areaCurrentTags.forEach((tag,i)=>{const el=document.createElement('span');el.className='tag';el.innerHTML=`${x(tag)}<span class="tag-x" onclick="window._rat(${i})">×</span>`;c.insertBefore(el,inp);});
+}
+window._rt=removeTag; window._rat=removeAreaTag;
+
+function populateAreaSelect(){
+  const sel=document.getElementById('f-area');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— Sin área —</option>';
+  areas.forEach(a=>sel.innerHTML+=`<option value="${a.id}">${x(a.nombre)}</option>`);
+  sel.value=cur;
+}
+
+// ── AUTH ─────────────────────────────────────────────────
+function getRole(){
+  const r=sessionStorage.getItem('barrio_role');
+  if(!r)return null;
+  try{return JSON.parse(r)}catch{return null}
+}
+function setRole(r){role=r;sessionStorage.setItem('barrio_role',JSON.stringify(r));}
+function clearRole(){role=null;sessionStorage.removeItem('barrio_role');}
+
+function updateAuthUI(){
+  role=getRole();
+  const lockBtn=document.getElementById('btn-lock');
+  const heroRole=document.getElementById('hero-role');
+  const isAdmin=role==='admin';
+  const isArea=role&&role!=='admin';
+
+  // hero role badge
+  if(isAdmin){heroRole.style.display='inline-block';heroRole.textContent='👑 Presidente';heroRole.className='hero-role admin';}
+  else if(isArea){heroRole.style.display='inline-block';heroRole.textContent=`🏷️ ${role.areaNombre}`;heroRole.className='hero-role area';}
+  else{heroRole.style.display='none';}
+
+  // lock btn
+  if(role){lockBtn.textContent='🔓';lockBtn.classList.add('authed');}
+  else{lockBtn.textContent='🔒';lockBtn.classList.remove('authed');}
+
+  // show/hide tabs
+  const showPA=isAdmin||isArea;
+  const showADM=isAdmin;
+  ['PA','ADM'].forEach(k=>{
+    const m=document.getElementById('tab-'+k),d=document.getElementById('dtab-'+k);
+    const show=k==='PA'?showPA:showADM;
+    if(m)m.style.display=show?'flex':'none';
+    if(d)d.style.display=show?'flex':'none';
+  });
+
+  if(!role&&(tab==='PA'||tab==='ADM'))cambiarTab('P');
+  render();
+}
+
+window.toggleAuth=()=>{
+  if(role){clearRole();updateAuthUI();toast('🔒 Sesión cerrada');}
+  else openPIN();
+};
+
+// ── RENDER ───────────────────────────────────────────────
+function render(){
+  const myRole=getRole();
+  const isAdmin=myRole==='admin';
+  const isArea=myRole&&myRole!=='admin';
+
+  // filter by area if area role
+  const visibleTareas=isArea
+    ? tareas.filter(t=>t.areaId===myRole.areaId||!t.areaId)
+    : tareas;
+
+  const PA=visibleTareas.filter(t=>t.e==='PA');
+  const P=visibleTareas.filter(t=>t.e==='P');
+  const EP=visibleTareas.filter(t=>t.e==='EP');
+  const R=visibleTareas.filter(t=>t.e==='R');
+  const allP=tareas.filter(t=>t.e==='P');
+  const allEP=tareas.filter(t=>t.e==='EP');
+  const allR=tareas.filter(t=>t.e==='R');
+
+  ['P','EP','R','PA'].forEach((k,i)=>{const el=document.getElementById('dcnt-'+k);if(el)el.textContent=[P,EP,R,PA][i].length;});
+  [{k:'P',arr:allP},{k:'PA',arr:PA}].forEach(({k,arr})=>{
+    const b=document.getElementById('nb-'+k);
+    if(b){b.textContent=arr.length;b.style.display=arr.length?'block':'none';}
+  });
+  document.getElementById('st-open').textContent=allP.length+allEP.length;
+  document.getElementById('st-res').textContent=allR.length;
+  const hoy=new Date();hoy.setHours(0,0,0,0);
+  document.getElementById('st-venc').textContent=tareas.filter(t=>['P','EP'].includes(t.e)&&t.pl&&new Date(t.pl+'T00:00:00')<hoy).length;
+
+  const tasks=document.getElementById('tasks');
+
+  if(tab==='ADM'){
+    if(!isAdmin){cambiarTab('P');return;}
+    renderAdminPanel();
+    return;
+  }
+
+  const map={P,EP,R,PA};
+  const lista=map[tab]||P;
+  tasks.innerHTML='';
+  if(!lista.length){
+    const icons={P:'🌿',EP:'🔄',R:'📋',PA:'📬'};
+    const msgs={P:'No hay tareas pendientes',EP:'No hay tareas en progreso',R:'Sin tareas resueltas aún',PA:'No hay sugerencias por aprobar'};
+    tasks.innerHTML=`<div class="empty"><div class="empty-icon">${icons[tab]}</div><p>${msgs[tab]}</p></div>`;
+    return;
+  }
+  lista.forEach(t=>tasks.appendChild(mkCard(t)));
+}
+
+function mkCard(t){
+  const myRole=getRole();
+  const isAdmin=myRole==='admin';
+  const isArea=myRole&&myRole!=='admin';
+  const canEdit=isAdmin||(isArea&&(t.areaId===myRole.areaId||!t.areaId));
+
+  const hoy=new Date();hoy.setHours(0,0,0,0);
+  let ph='';
+  if(t.pl){
+    const p=new Date(t.pl+'T00:00:00'),d=Math.ceil((p-hoy)/864e5);
+    if(t.e!=='R')ph=d<0?`<span class="venc">⚠️ Vencida hace ${-d}d</span>`:d<=3?`<span class="pv">⏰ Vence en ${d}d</span>`:`<span>📅 ${fmt(t.pl)}</span>`;
+    else ph=`<span class="dim">Plazo: ${fmt(t.pl)}</span>`;
+  }
+  const resps=Array.isArray(t.re)?t.re:(t.re?[t.re]:[]);
+  const respsHtml=resps.map(r=>`<span style="background:var(--green-pale);color:var(--green-dark);padding:2px 7px;border-radius:99px;font-size:.68rem;font-weight:700">${x(r)}</span>`).join(' ')||'<span class="dim">Sin asignar</span>';
+  const area=areas.find(a=>a.id===t.areaId);
+  const areaColor=area?AREA_COLORS[areas.indexOf(area)%AREA_COLORS.length]:'#999';
+
+  let acc='';
+  if(t.e==='PA'&&(isAdmin||canEdit)){
+    acc=`<button class="btn b-apr" onclick="aprobar('${t.id}')">✅ Aprobar</button><button class="btn b-rej" onclick="rechazar('${t.id}')">✗ Rechazar</button>`;
+  }else if(canEdit){
+    if(t.e==='P')acc=`<button class="btn b-prog" onclick="setState('${t.id}','EP')">🔄 Progreso</button><button class="btn b-res" onclick="openRes('${t.id}')">✅ Resolver</button><button class="btn b-ed" onclick="openEdit('${t.id}')">✏️</button>${isAdmin?`<button class="btn b-del" onclick="del('${t.id}')">🗑️</button>`:''}`;
+    else if(t.e==='EP')acc=`<button class="btn b-res" onclick="openRes('${t.id}')">✅ Resolver</button><button class="btn b-ed" onclick="openEdit('${t.id}')">✏️</button>${isAdmin?`<button class="btn b-del" onclick="del('${t.id}')">🗑️</button>`:''}`;
+    else if(t.e==='R'&&isAdmin)acc=`<button class="btn b-reab" onclick="setState('${t.id}','P')">↩ Reabrir</button><button class="btn b-del" onclick="del('${t.id}')">🗑️</button>`;
+  }
+
+  const hist=t.historial||[];
+  const histHtml=hist.length?`<button class="hist-toggle" onclick="toggleHist(this)">▶ Historial (${hist.length})</button><div class="hist-list" style="display:none">${hist.map(h=>`<div class="hist-item h-${h.a||h.e}"><strong>${LB[h.a]||h.a||LB[h.e]||h.e}</strong>${h.nota?` — ${x(h.nota)}`:''}  <div class="hist-fecha">${fmtFull(h.ts)}</div></div>`).join('')}</div>`:'';
+
+  const div=document.createElement('div');
+  div.className=`card c-${t.e}`;
+  div.innerHTML=`
+    <div class="card-title-row">
+      <span class="card-title">${x(t.ta)}</span>
+      <span class="bs bs-${t.e}">${LB[t.e]||t.e}</span>
+      ${area?`<span class="ba" style="background:${areaColor}22;color:${areaColor}">${x(area.nombre)}</span>`:''}
+    </div>
+    ${t.de?`<div class="card-desc">${x(t.de)}</div>`:''}
+    ${t.e==='R'&&t.rn?`<div class="card-resolve-note">💡 <strong>Resolución:</strong> ${x(t.rn)}</div>`:''}
+    <div class="card-meta">
+      <span>👥 ${respsHtml}</span>
+      ${ph}
+      ${t.e==='R'&&t.rd?`<span style="color:var(--green)">✅ ${fmt(t.rd)}</span>`:''}
+      <span class="dim">${fmt((t.ts||'').substring?.(0,10)||'')}</span>
+    </div>
+    ${histHtml}
+    ${acc?`<div class="card-actions">${acc}</div>`:''}`;
+  return div;
+}
+
+window.toggleHist=btn=>{const l=btn.nextElementSibling,o=l.style.display==='block';l.style.display=o?'none':'block';btn.textContent=(o?'▶':'▼')+btn.textContent.slice(1);};
+
+// ── ADMIN PANEL ──────────────────────────────────────────
+function renderAdminPanel(){
+  const tasks=document.getElementById('tasks');
+  tasks.innerHTML=`
+    <p class="section-title">📍 Áreas del barrio</p>
+    <button class="add-btn" onclick="openArea(null)">+ Nueva área</button>
+    <div id="areas-list"></div>
+    <p class="section-title" style="margin-top:8px">🔐 PIN de administración (Presidente)</p>
+    <div class="admin-card">
+      <div class="admin-card-info">
+        <h4>PIN actual</h4>
+        <p>Compartilo solo con el presidente de la Asociación Civil</p>
+      </div>
+      <span class="pin-display">${ADMIN_PIN}</span>
+    </div>`;
+  const list=document.getElementById('areas-list');
+  areas.forEach((a,i)=>{
+    const color=AREA_COLORS[i%AREA_COLORS.length];
+    const respStr=a.responsables&&a.responsables.length?a.responsables.join(', '):'Sin responsables asignados';
+    const card=document.createElement('div');
+    card.className='admin-card';
+    card.innerHTML=`
+      <div class="admin-card-info">
+        <h4><span class="area-color" style="background:${color}"></span>${x(a.nombre)}</h4>
+        <p>${x(a.desc||'')}${a.desc?' · ':''}<strong>PIN:</strong> ${a.pin||'—'}</p>
+        <p style="margin-top:2px">👥 ${x(respStr)}</p>
+      </div>
+      <div class="admin-card-actions">
+        <button class="btn-sm btn-sm-edit" onclick="openArea('${a.id}')">✏️ Editar</button>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+window.openArea=id=>{
+  editAreaId=id;
+  areaCurrentTags=[];
+  if(id){
+    const a=areas.find(z=>z.id===id);
+    if(!a)return;
+    document.getElementById('area-title').textContent='Editar área';
+    document.getElementById('a-nombre').value=a.nombre||'';
+    document.getElementById('a-desc').value=a.desc||'';
+    document.getElementById('a-pin').value=a.pin||'';
+    areaCurrentTags=[...(a.responsables||[])];
+    document.getElementById('area-del-wrap').style.display='block';
+  }else{
+    document.getElementById('area-title').textContent='Nueva área';
+    document.getElementById('a-nombre').value='';
+    document.getElementById('a-desc').value='';
+    document.getElementById('a-pin').value='';
+    document.getElementById('area-del-wrap').style.display='none';
+  }
+  renderAreaTags();
+  document.getElementById('m-area').style.display='flex';
+};
+
+window.saveArea=async()=>{
+  const nombre=document.getElementById('a-nombre').value.trim();
+  const pin=String(document.getElementById('a-pin').value).trim();
+  if(!nombre){alert('El nombre del área es obligatorio');return;}
+  if(pin&&pin.length!==4){alert('El PIN debe tener exactamente 4 dígitos');return;}
+  if(document.getElementById('area-tag-input').value.trim())addAreaTag(document.getElementById('area-tag-input').value.trim());
+  const data={nombre,desc:document.getElementById('a-desc').value.trim(),pin,responsables:areaCurrentTags};
+  if(editAreaId)await fn.updateDoc(fn.doc(db,'areas',editAreaId),data);
+  else await fn.addDoc(fn.collection(db,'areas'),data);
+  document.getElementById('m-area').style.display='none';
+  toast(editAreaId?'✅ Área actualizada':'✅ Área creada');
+  renderAdminPanel();
+};
+
+window.deleteArea=async()=>{
+  if(!confirm('¿Eliminar esta área? Las tareas asociadas quedarán sin área.'))return;
+  await fn.deleteDoc(fn.doc(db,'areas',editAreaId));
+  document.getElementById('m-area').style.display='none';
+  toast('🗑️ Área eliminada');
+  renderAdminPanel();
+};
+
+// ── TAREAS ───────────────────────────────────────────────
+window.abrirModal=()=>{
+  editId=null;currentTags=[];renderTags();
+  const myRole=getRole();
+  const isAdmin=myRole==='admin';
+  document.getElementById('m-title').textContent=isAdmin?'Nueva tarea':'Sugerir una tarea';
+  document.getElementById('m-subtitle').style.display=isAdmin?'none':'block';
+  ['f-ta','f-de'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('tag-input').value='';
+  document.getElementById('f-pl').value='';
+  // pre-select area if area role
+  if(myRole&&myRole!=='admin'){
+    document.getElementById('f-area').value=myRole.areaId||'';
+    // pre-fill responsables from area
+    const area=areas.find(a=>a.id===myRole.areaId);
+    if(area&&area.responsables){currentTags=[...area.responsables];renderTags();}
+  }else{
+    document.getElementById('f-area').value='';
+  }
+  document.getElementById('m-task').style.display='flex';
+};
+window.closeTask=()=>document.getElementById('m-task').style.display='none';
+
+window.openEdit=id=>{
+  const t=tareas.find(z=>z.id===id);if(!t)return;
+  editId=id;
+  currentTags=Array.isArray(t.re)?[...t.re]:(t.re?[t.re]:[]);
+  renderTags();
+  document.getElementById('m-title').textContent='Editar tarea';
+  document.getElementById('m-subtitle').style.display='none';
+  document.getElementById('f-ta').value=t.ta||'';
+  document.getElementById('f-de').value=t.de||'';
+  document.getElementById('f-area').value=t.areaId||'';
+  document.getElementById('tag-input').value='';
+  document.getElementById('f-pl').value=t.pl||'';
+  document.getElementById('m-task').style.display='flex';
+};
+
+window.saveTarea=async()=>{
+  if(document.getElementById('tag-input').value.trim())addTag(document.getElementById('tag-input').value.trim());
+  const ta=document.getElementById('f-ta').value.trim();
+  if(!ta){alert('El nombre de la tarea es obligatorio');return;}
+  const myRole=getRole();
+  const isAdmin=myRole==='admin';
+  const areaId=document.getElementById('f-area').value||null;
+  const data={ta,de:document.getElementById('f-de').value.trim(),re:currentTags.length?currentTags:['Sin asignar'],areaId,pl:document.getElementById('f-pl').value||null};
+  if(editId){
+    await fn.updateDoc(fn.doc(db,'tareas',editId),data);
+    toast('✅ Tarea actualizada');
+  }else{
+    const estado=isAdmin?'P':'PA';
+    data.e=estado;data.ts=nowISO();
+    data.historial=[{de:null,a:estado,ts:nowISO(),nota:isAdmin?'Creada por administración':'Sugerida por vecino'}];
+    await fn.addDoc(fn.collection(db,'tareas'),data);
+    toast(isAdmin?'✅ Tarea publicada':'📬 Sugerencia enviada');
+  }
+  window.closeTask();
+};
+
+window.aprobar=async id=>{
+  const t=tareas.find(z=>z.id===id);if(!t)return;
+  await fn.updateDoc(fn.doc(db,'tareas',id),{e:'P',historial:fn.arrayUnion({de:t.e,a:'P',ts:nowISO(),nota:'Aprobada por administración'})});
+  toast('✅ Tarea aprobada');
+};
+window.rechazar=async id=>{
+  if(!confirm('¿Rechazar esta sugerencia?'))return;
+  await fn.deleteDoc(fn.doc(db,'tareas',id));toast('🗑️ Rechazada');
+};
+window.openRes=id=>{resId=id;document.getElementById('r-no').value='';document.getElementById('m-res').style.display='flex'};
+window.confirmRes=async()=>{
+  const t=tareas.find(z=>z.id===resId);if(!t)return;
+  const nota=document.getElementById('r-no').value.trim();
+  await fn.updateDoc(fn.doc(db,'tareas',resId),{e:'R',rd:todayStr(),rn:nota,historial:fn.arrayUnion({de:t.e,a:'R',ts:nowISO(),nota:nota||'Resuelta'})});
+  document.getElementById('m-res').style.display='none';
+  window.cambiarTab('R');toast('✅ Resuelta');
+};
+window.setState=async(id,e)=>{
+  const t=tareas.find(z=>z.id===id);if(!t)return;
+  await fn.updateDoc(fn.doc(db,'tareas',id),{e,historial:fn.arrayUnion({de:t.e,a:e,ts:nowISO(),nota:''})});
+  toast('✅ Estado actualizado');
+};
+window.del=async id=>{if(!confirm('¿Eliminar?'))return;await fn.deleteDoc(fn.doc(db,'tareas',id));toast('🗑️ Eliminada')};
+
+// ── TABS ─────────────────────────────────────────────────
+window.cambiarTab=t=>{
+  tab=t;
+  ['P','EP','R','PA','ADM'].forEach(k=>{
+    const m=document.getElementById('tab-'+k),d=document.getElementById('dtab-'+k);
+    if(m)m.classList.toggle('active',k===t);
+    if(d)d.classList.toggle('active',k===t);
+  });
+  render();
+};
+
+// ── PIN ──────────────────────────────────────────────────
+function openPIN(){pinBuffer='';renderDots();document.getElementById('pin-err').textContent='';document.getElementById('m-pin').style.display='flex';}
+window.closePIN=()=>{document.getElementById('m-pin').style.display='none';pinBuffer='';renderDots();};
+window.pinKey=k=>{
+  if(pinBuffer.length>=4)return;
+  pinBuffer+=k;renderDots();
+  if(pinBuffer.length===4)checkPIN();
+};
+window.pinDel=()=>{pinBuffer=pinBuffer.slice(0,-1);renderDots();};
+function renderDots(){for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('filled',i<pinBuffer.length);}
+
+async function checkPIN(){
+  if(pinBuffer===ADMIN_PIN){
+    setRole('admin');
+    document.getElementById('m-pin').style.display='none';
+    pinBuffer='';renderDots();
+    updateAuthUI();cambiarTab('ADM');
+    toast('👑 Bienvenido, Presidente');
+    return;
+  }
+  // check area PINs from Firestore
+  const matchArea=areas.find(a=>a.pin&&a.pin===pinBuffer);
+  if(matchArea){
+    setRole({areaId:matchArea.id,areaNombre:matchArea.nombre,responsables:matchArea.responsables||[]});
+    document.getElementById('m-pin').style.display='none';
+    pinBuffer='';renderDots();
+    updateAuthUI();cambiarTab('PA');
+    toast(`🏷️ Área: ${matchArea.nombre}`);
+    return;
+  }
+  document.getElementById('pin-err').textContent='PIN incorrecto';
+  setTimeout(()=>{pinBuffer='';renderDots();document.getElementById('pin-err').textContent='';},700);
+}
+
+// ── EXPORT ───────────────────────────────────────────────
+window.exportExcel=()=>{
+  const vis=tareas.filter(t=>t.e!=='PA');
+  if(!vis.length){toast('No hay tareas para exportar');return;}
+  const hds=['Tarea','Descripción','Área','Responsables','Estado','Plazo','Fecha Resolución','Resolución','Cargada'];
+  const rows=vis.map(t=>{
+    const a=areas.find(z=>z.id===t.areaId);
+    return[t.ta||'',t.de||'',a?a.nombre:'Sin área',(Array.isArray(t.re)?t.re:t.re?[t.re]:[]).join(', '),LB[t.e]||t.e,t.pl||'',t.rd||'',t.rn||'',(t.ts||'').substring(0,10)];
+  });
+  const csv=['',''].concat([hds,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','))).join('\n');
+  const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`LaCanada_${todayStr()}.csv`;a.click();
+  URL.revokeObjectURL(url);toast('📊 Exportado');
+};
+
+// ── UTILS ────────────────────────────────────────────────
+function fmt(s){if(!s)return'';try{return new Date(s.substring(0,10)+'T12:00:00').toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'numeric'})}catch{return s}}
+function fmtFull(s){if(!s)return'';try{return new Date(s).toLocaleString('es-AR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}catch{return s}}
+function x(s){if(!s)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+</script>
+</body>
+</html>

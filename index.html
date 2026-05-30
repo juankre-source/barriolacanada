@@ -469,7 +469,15 @@ function updateAuthUI(){
   else hr.style.display='none';
   if(role){lock.classList.add('authed');lock.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="12" y1="15" x2="12" y2="17"/></svg>';}
   else{lock.classList.remove('authed');lock.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';}
-  ['PA','ADM'].forEach(k=>{const show=k==='PA'?(role!=null):role==='admin';['tab-'+k,'dtab-'+k].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=show?'flex':'none';});});
+  ['PA','ADM','SG'].forEach(k=>{
+    let show;
+    if(k==='PA') show=role!=null;
+    else if(k==='ADM') show=role==='admin';
+    else if(k==='SG') show=role==null; // only show to non-logged-in users
+    ['tab-'+k,'dtab-'+k].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=show?'flex':'none';});
+  });
+  // If logged in and on SG tab, redirect to PA
+  if(role&&tab==='SG')cambiarTab('PA');
   if(!role&&(tab==='PA'||tab==='ADM'))cambiarTab('P');
   render();
 }
